@@ -31,4 +31,6 @@ public interface RoleMapper {
     List<Role> findRoleListWithPermission();
 
     Role findOneRoleById(Integer id);
+
+    List<Role> findroleListByEmployeeId(Integer id);
 }

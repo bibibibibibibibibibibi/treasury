@@ -1,5 +1,6 @@
 package com.sunhao.erp.mapper;
 
+import com.sunhao.erp.entity.Permission;
 import com.sunhao.erp.entity.RolePermission;
 import com.sunhao.erp.entity.RolePermissionExample;
 import java.util.List;
@@ -27,4 +28,5 @@ public interface RolePermissionMapper {
     int updateByPrimaryKeySelective(RolePermission record);
 
     int updateByPrimaryKey(RolePermission record);
+
 }

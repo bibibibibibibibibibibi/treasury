@@ -38,11 +38,10 @@ public class EmployeeServiceImpl implements EmployeeService {
      *
      * @param userTel
      * @param password
-     * @param loginIp
      * @return
      */
     @Override
-    public Employee verify(String userTel, String password, String loginIp) throws ServiceException{
+    public void verify(String userTel, String oldPassword, String newPassword) throws ServiceException{
 
         EmployeeExample employeeExample = new EmployeeExample();
         employeeExample.createCriteria().andEmployeeTelEqualTo(userTel);
@@ -54,23 +53,10 @@ public class EmployeeServiceImpl implements EmployeeService {
         if(employeeList != null && employeeList.size() > 0) {
             employee = employeeList.get(0);
 
-            if(employee.getPassword().equals(DigestUtils.md5Hex(password))) {
+            if(employee.getPassword().equals(DigestUtils.md5Hex(oldPassword))) {
+              employee.setPassword(DigestUtils.md5Hex(newPassword));
 
-                if(employee.getState().equals(Employee.EMPLOYEE_STATE_NORMAL)) {
-
-                    EmployeeLoginLog employeeLoginLog = new EmployeeLoginLog();
-
-                    employeeLoginLog.setLoginIp(loginIp);
-                    employeeLoginLog.setLoginTime(new Date());
-                    employeeLoginLog.setEmployeeId(employee.getId());
-
-                    employeeLoginLogMapper.insertSelective(employeeLoginLog);
-
-                logger.info("{}-{}在{}登录了系统", employee.getEmployeeName(), employee.getEmployeeTel(), new Date());
-                return employee;
-                } else {
-                    throw new ServiceException("当前账户异常！");
-                }
+             employeeMapper.updateByPrimaryKeySelective(employee);
             } else {
                 throw new ServiceException("用户名或者密码错误！");
             }
@@ -150,6 +136,49 @@ public class EmployeeServiceImpl implements EmployeeService {
             EmployeeRole employeeRole = new EmployeeRole();
             employeeRole.setEmployeeId(employee.getId());
             employeeRole.setRoleId(roleId);
+
+            employeeRoleMapper.insert(employeeRole);
+        }
+    }
+
+    @Override
+    public Employee findEmployeeByUserTel(String userTel) {
+        if (userTel != null) {
+            EmployeeExample employeeExample = new EmployeeExample();
+            employeeExample.createCriteria().andEmployeeTelEqualTo(userTel);
+
+            List<Employee> employeeList = employeeMapper.selectByExample(employeeExample);
+
+            if (employeeList != null && employeeList.size() > 0) {
+                return employeeList.get(0);
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public Employee findEMPById(Integer id) {
+        return employeeMapper.selectByPrimaryKey(id);
+    }
+
+    /**
+     * 修改员工信息和修改员工和角色关联关系表
+     *
+     * @param roleIds
+     * @param employee
+     */
+    @Override
+    public void editEmployeewithRole(Integer[] roleIds, Employee employee) {
+       employeeMapper.updateByPrimaryKeySelective(employee);
+
+       EmployeeRoleExample employeeRoleExample = new EmployeeRoleExample();
+       employeeRoleExample.createCriteria().andEmployeeIdEqualTo(employee.getId());
+       employeeRoleMapper.deleteByExample(employeeRoleExample);
+
+        for (Integer id : roleIds) {
+            EmployeeRole employeeRole = new EmployeeRole();
+            employeeRole.setRoleId(id);
+            employeeRole.setEmployeeId(employee.getId());
 
             employeeRoleMapper.insert(employeeRole);
         }

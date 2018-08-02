@@ -105,4 +105,18 @@ public interface RolePermissionService {
      * @param permission
      */
     void updatePermission(Permission permission);
+
+    /**
+     * 根据员工id查找角色集合
+     * @param id
+     * @return
+     */
+    List<Role> findRoleListById(Integer id);
+
+    /**
+     * 根据角色id查找对应的权限集合
+     * @param id
+     * @return
+     */
+    List<Permission> findPermissionByRoleId(Integer id);
 }

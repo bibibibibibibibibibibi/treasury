@@ -197,7 +197,19 @@
     LEFT JOIN permission AS p ON p.id = rp.permission_id
     where r.id = #{id}
   </select>
-  <update id="updateByExampleSelective" parameterType="map">
+    <select id="findroleListByEmployeeId" resultType="com.sunhao.erp.entity.Role">
+    SELECT
+        r.*
+    FROM
+        role AS r,
+        employee AS e,
+        employee_role AS er
+    WHERE
+        e.id = er.employee_id
+    AND r.id = er.role_id
+    AND e.id = #{id}
+    </select>
+    <update id="updateByExampleSelective" parameterType="map">
     update role
     <set>
       <if test="record.id != null">

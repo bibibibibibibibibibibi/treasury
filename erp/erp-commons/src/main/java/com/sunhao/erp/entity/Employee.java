@@ -137,4 +137,18 @@ public class Employee implements Serializable {
         public void setRoleList(List<Role> roleList) {
             this.roleList = roleList;
         }
+
+    @Override
+    public String toString() {
+        return "Employee{" +
+                "id=" + id +
+                ", employeeName='" + employeeName + '\'' +
+                ", employeeTel='" + employeeTel + '\'' +
+                ", password='" + password + '\'' +
+                ", permissionId=" + permissionId +
+                ", createTime=" + createTime +
+                ", state=" + state +
+                ", roleList=" + roleList +
+                '}';
+    }
 }

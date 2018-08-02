@@ -1,6 +1,8 @@
 package com.sunhao.erp.service;
 
 import com.sunhao.erp.entity.Employee;
+import com.sunhao.erp.entity.Role;
+import com.sunhao.erp.exception.ServiceException;
 
 import java.util.List;
 import java.util.Map;
@@ -17,7 +19,7 @@ public interface EmployeeService {
      * @param loginIp
      * @return
      */
-    Employee verify(String userTel, String password, String loginIp);
+    void verify(String userTel, String oldPassword, String  newPassword) throws ServiceException;
 
     /**
      * 查找员工信息集合，若有搜索条件，则加上搜索条件
@@ -44,4 +46,26 @@ public interface EmployeeService {
      * @param roleIds
      */
     void addEmployee(Employee employee, Integer[] roleIds);
+
+    /**
+     * 根据手机号查找员工对象
+     * @param userTel
+     * @return
+     */
+    Employee findEmployeeByUserTel(String userTel);
+
+    /**
+     * 修改员工信息，根据id查找员工信息
+     * @param id
+     * @return
+     */
+    Employee findEMPById(Integer id);
+
+
+    /**
+     * 修改员工信息和修改员工和角色关联关系表
+     * @param roleIds
+     * @param employee
+     */
+    void editEmployeewithRole(Integer[] roleIds, Employee employee);
 }

@@ -226,6 +226,7 @@ public class RolePermissionServiceImpl implements RolePermissionService {
 
         saveRoleAndPermission(role.getId(), permissionId);
 
+        role.setUpdateTime(new Date());
         roleMapper.updateByPrimaryKeySelective(role);
     }
 
@@ -277,6 +278,28 @@ public class RolePermissionServiceImpl implements RolePermissionService {
     public void updatePermission(Permission permission) {
         permission.setUpdateTime(new Date());
         permissionMapper.updateByPrimaryKeySelective(permission);
+    }
+
+    /**
+     * 根据员工id查找角色集合
+     *
+     * @param id
+     * @return
+     */
+    @Override
+    public List<Role> findRoleListById(Integer id) {
+        return roleMapper.findroleListByEmployeeId(id);
+    }
+
+    /**
+     * 根据角色id查找对应的权限集合
+     *
+     * @param id
+     * @return
+     */
+    @Override
+    public List<Permission> findPermissionByRoleId(Integer id) {
+        return permissionMapper.findPermissionRoleId(id);
     }
 
 }
